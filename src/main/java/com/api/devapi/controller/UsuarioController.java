@@ -27,16 +27,6 @@ public class UsuarioController {
     }
 
     /**
-     * Obtém todos os usuários.
-     *
-     * @return
-     */
-    @GetMapping
-    public List<Usuario> getAll() {
-        return service.getTodosUsuarios();
-    }
-
-    /**
      * Cria um usuário no banco de dados.
      *
      * @param usuario
@@ -45,6 +35,16 @@ public class UsuarioController {
     @PostMapping
     public Usuario create(@RequestBody Usuario usuario) {
         return service.createUsuario(usuario);
+    }
+
+    /**
+     * Obtém todos os usuários.
+     *
+     * @return
+     */
+    @GetMapping
+    public List<Usuario> getAll() {
+        return service.getTodosUsuarios();
     }
 
     /**
