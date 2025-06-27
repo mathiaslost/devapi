@@ -53,7 +53,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Sala e verifica senhas de forma segura.
+     * Salva e verifica senhas de forma segura.
      *
      * @return
      */
