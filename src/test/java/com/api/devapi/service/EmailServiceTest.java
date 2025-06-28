@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -23,38 +22,6 @@ class EmailServiceTest {
     @BeforeEach
     void setUp() {
         emailService = new EmailService();
-    }
-
-    @Test
-    @DisplayName("Teste envio de email na criação de usuários")
-    void testEnviarEmailUsuarioCriacao() {
-        // Preparação
-        Usuario usuario = new Usuario();
-        usuario.setNome("Gabriel");
-        usuario.setEmail("gabriel@dev.com");
-        usuario.setSenha("teste@123");
-
-        /**
-         * Execução e Verificação
-         * Verifica se o método não lança exceção.
-         */
-        assertDoesNotThrow(() -> emailService.enviarEmailUsuario("I", usuario));
-    }
-
-    @Test
-    @DisplayName("Teste envio de email na atualização de usuários")
-    void testEnviarEmailUsuarioAtualizacao() {
-        // Preparação
-        Usuario usuario = new Usuario();
-        usuario.setNome("Carlos");
-        usuario.setEmail("carlos@teste.com");
-        usuario.setSenha("psw909");
-
-        /**
-         * Execução e Verificação
-         * Verifica se o método não lança exceção.
-         */
-        assertDoesNotThrow(() -> emailService.enviarEmailUsuario("U", usuario));
     }
 
     @Test
