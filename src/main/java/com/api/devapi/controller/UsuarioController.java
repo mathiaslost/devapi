@@ -32,9 +32,20 @@ public class UsuarioController {
      * @param usuario
      * @return
      */
-    @PostMapping
+    @PostMapping("/createUsuario")
     public Usuario create(@RequestBody Usuario usuario) {
         return service.createUsuario(usuario);
+    }
+
+    /**
+     * Atualiza um usuário existinte com base no ID.
+     *
+     * @param usuario
+     * @return
+     */
+    @PostMapping("/updateUsuario")
+    public Usuario update(@RequestBody Usuario usuario) {
+        return service.updateUsuario(usuario.getId(), usuario);
     }
 
     /**
@@ -42,7 +53,7 @@ public class UsuarioController {
      *
      * @return
      */
-    @GetMapping
+    @GetMapping("/getTodosUsuarios")
     public List<Usuario> getAll() {
         return service.getTodosUsuarios();
     }

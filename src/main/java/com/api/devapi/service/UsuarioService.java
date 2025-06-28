@@ -1,6 +1,8 @@
 package com.api.devapi.service;
 
 import com.api.devapi.model.Usuario;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,13 @@ public class UsuarioService {
     // Referencia o Gerenciador da entidade 'Usuario'.
     private final UsuarioRepository repository;
 
+    @Autowired
     public UsuarioService(UsuarioRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private EmailService emailService;
 
     /**
      * Registra o usuário na base.
@@ -29,8 +35,38 @@ public class UsuarioService {
      * @param usuario
      * @return
      */
+    @Transactional
     public Usuario createUsuario(Usuario usuario) {
-        return repository.save(usuario);
+        // Salva o registro na base.
+        Usuario usuarioSalvo = repository.save(usuario);
+
+        try {
+            // Envia e-mail para o usuário.
+            emailService.enviarEmailUsuario("I", usuarioSalvo);
+        } catch (Exception e) {
+            throw new RuntimeException("Usuário salvo, mas houve falha ao enviar o e-mail.");
+        }
+        return usuarioSalvo;
+    }
+
+    /**
+     * Atualiza o usuário na base.
+     *
+     * @param id
+     * @param usuarioEdit
+     * @return
+     */
+    @Transactional
+    public Usuario updateUsuario(Long id, Usuario usuarioEdit) {
+        Usuario usuarioExist = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Não foi possível localizar o usuário."));
+
+        usuarioExist.setNome(usuarioEdit.getNome());
+        usuarioExist.setEmail(usuarioEdit.getEmail());
+
+        Usuario usuarioAtualizado = repository.save(usuarioExist);
+        emailService.enviarEmailUsuario("U", usuarioAtualizado);
+        return usuarioAtualizado;
     }
 
     /**
