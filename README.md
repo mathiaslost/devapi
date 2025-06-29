@@ -91,6 +91,13 @@ Antes de tudo, você precisa ter instalado na sua máquina:
 git clone https://github.com/mathiaslost/devapi.git
 ```
 
+### 🚀 Rode o projeto
+```bash
+mvn clean install
+
+mvn spring-boot:run
+```
+
 ---
 
 ## 🙋‍♂️ Autor
