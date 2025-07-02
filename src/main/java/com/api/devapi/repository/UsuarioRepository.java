@@ -4,7 +4,6 @@ import com.api.devapi.model.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
 /**
  * Interface responsável por manipular a entidade 'Usuario' no banco de dados.
