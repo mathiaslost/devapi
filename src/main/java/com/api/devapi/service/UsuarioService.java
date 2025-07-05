@@ -24,16 +24,15 @@ public class UsuarioService {
     // Referencia o Gerenciador da entidade 'Usuario'.
     private final UsuarioRepository repository;
 
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     /**
      * Registra o usuário na base.

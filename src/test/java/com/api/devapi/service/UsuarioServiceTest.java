@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,9 @@ public class UsuarioServiceTest {
 
     @Mock
     private EmailService emailService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UsuarioService usuarioService;
@@ -87,11 +91,16 @@ public class UsuarioServiceTest {
         Usuario usuario = new Usuario();
         usuario.setNome("Paulo");
         usuario.setEmail("paulo@cmd.com");
+        usuario.setSenha("teste@123");
 
         Usuario usuarioSalvo = new Usuario();
-        usuario.setId(1L);
-        usuario.setNome("Paulo");
-        usuario.setEmail("paulo@cmd.com");
+        usuarioSalvo.setId(1L);
+        usuarioSalvo.setNome("Paulo");
+        usuarioSalvo.setEmail("paulo@cmd.com");
+        usuarioSalvo.setSenha("teste@123");
+
+        // Configura mock do passwordEncoder para retornar "hashSenha" ao codificar
+        when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("hashSenha");
 
         when(repository.save(usuario)).thenReturn(usuarioSalvo);
 
