@@ -1,5 +1,6 @@
 package com.api.devapi.controller;
 
+import com.api.devapi.dto.TrocaSenhaRequestDTO;
 import com.api.devapi.model.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,6 +47,18 @@ public class UsuarioController {
     @PostMapping("/updateUsuario")
     public Usuario update(@RequestBody Usuario usuario) {
         return service.updateUsuario(usuario.getId(), usuario);
+    }
+
+    /**
+     * Atualiza senha na base de dados.
+     *
+     * @param id
+     * @param request
+     * @return
+     */
+    @PutMapping("/{id}/password")
+    public String changePassword(@PathVariable Long id, @RequestBody TrocaSenhaRequestDTO request) {
+        return service.updatePassword(id, request);
     }
 
     /**

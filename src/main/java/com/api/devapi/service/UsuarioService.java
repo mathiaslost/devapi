@@ -1,12 +1,15 @@
 package com.api.devapi.service;
 
+import com.api.devapi.dto.TrocaSenhaRequestDTO;
 import com.api.devapi.model.Usuario;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.api.devapi.repository.UsuarioRepository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,9 @@ public class UsuarioService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * Registra o usuário na base.
      *
@@ -37,6 +43,10 @@ public class UsuarioService {
      */
     @Transactional
     public Usuario createUsuario(Usuario usuario) {
+        // Criptografa a senha com Hash.
+        String hashedPassword = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(hashedPassword);
+
         // Salva o registro na base.
         Usuario usuarioSalvo = repository.save(usuario);
 
@@ -61,12 +71,43 @@ public class UsuarioService {
         Usuario usuarioExist = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Não foi possível localizar o usuário."));
 
-        usuarioExist.setNome(usuarioEdit.getNome());
-        usuarioExist.setEmail(usuarioEdit.getEmail());
+        // Antes de adicionar cada campo editado, verifica se foi recebido no json.
+        if (StringUtils.hasText(usuarioEdit.getNome())) {
+            usuarioExist.setNome(usuarioEdit.getNome());
+        }
+        if (StringUtils.hasText(usuarioEdit.getUsername())) {
+            usuarioExist.setUsername(usuarioEdit.getUsername());
+        }
+        if (StringUtils.hasText(usuarioEdit.getEmail())) {
+            usuarioExist.setEmail(usuarioEdit.getEmail());
+        }
 
         Usuario usuarioAtualizado = repository.save(usuarioExist);
         emailService.enviarEmailUsuario("U", usuarioAtualizado);
         return usuarioAtualizado;
+    }
+
+    /**
+     * Verifica e atualiza senha do usuário.
+     *
+     * @param id
+     * @param request
+     * @return
+     */
+    public String updatePassword(Long id, TrocaSenhaRequestDTO request) {
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException(("Usuário não encontrado.")));
+
+        // Verifica se a senha atual está correta.
+        if (!passwordEncoder.matches(request.getSenhaAtual(), usuario.getSenha())) {
+            return "Senha atual incorreta.";
+        }
+
+        // Aplica o encoding com o hash na nova senha.
+        String novaSenhaHash = passwordEncoder.encode(request.getNovaSenha());
+        usuario.setSenha(novaSenhaHash);
+        repository.save(usuario);
+
+        return "Senha atualizada com sucesso.";
     }
 
     /**
