@@ -1,6 +1,6 @@
 package com.api.devapi.service;
 
-import com.api.devapi.model.Email;
+import com.api.devapi.dto.EmailDTO;
 import com.api.devapi.model.Usuario;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class EmailService {
         corpo.append("Senha: ").append(usuario.getSenha()).append("<br />");
 
         // Preparando email para o envio.
-        Email email = new Email();
+        EmailDTO email = new EmailDTO();
         email.setRemetente("email@corporativo.com.br");
         email.setDestinatario(usuario.getEmail());
         email.setTitulo(assunto);
